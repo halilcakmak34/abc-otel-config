@@ -1,5 +1,11 @@
 
 spring:
+  application:
+    name: gateway-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+---
+spring:
   config:
     activate:
       on-profile: docker
