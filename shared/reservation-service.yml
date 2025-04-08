@@ -12,7 +12,7 @@ spring:
       on-profile: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:6900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -29,7 +29,7 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   zipkin:
-    base-url: ${ZIPKIN_FULL_URL:http://localhost:5411}
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
     enabled: true
     service:
       name: reservation-service

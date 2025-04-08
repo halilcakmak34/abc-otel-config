@@ -11,7 +11,7 @@ spring:
       on-profile: docker
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:6900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
   jpa:
