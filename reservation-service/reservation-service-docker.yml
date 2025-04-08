@@ -1,0 +1,82 @@
+
+spring:
+  application:
+    name: reservation-service
+  output:
+    ansi:
+      enabled: always
+  security:
+    user:
+      name: stack
+      password: overflow
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      connection-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  zipkin:
+    base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
+    enabled: true
+    service:
+      name: reservation-service
+    message-timeout: 10
+    sleuth:
+      sampler:
+        probability: 1.0
+    servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 10MB
+  kafka:
+    bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
+    topics:
+      test:
+        name: test-topic
+        partitions: 1
+        replication-factor: 1
+      reservation:
+        name: reservation-topic
+        partitions: 1
+        replication-factor: 1
+      abc-logger:
+        name: abc-logger-topic
+        partitions: 1
+        replication-factor: 1
+
+springdoc:
+  packagesToScan: com.oteller.example.service.reservation
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){blue} %clr([%X{traceId:-},%X{spanId:-}]){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %m%n"
+
+server:
+  port: 5003
+
+
