@@ -1,18 +1,12 @@
 
 spring:
-  application:
-    name: notification-service
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
-
---- #DOCKER
-spring:
-  config:
-    activate:
-      on-profile: docker
+  security:
+    user:
+      name: stack
+      password: overflow
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://abc-postgres-host:4900/otel-db}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:4900/otel-db}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
@@ -28,12 +22,11 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
   zipkin:
     base-url: ${ZIPKIN_FULL_URL:http://localhost:9411}
     enabled: true
     service:
-      name: notification-service
+      name: reservation-service
     message-timeout: 10
     sleuth:
       sampler:
@@ -42,7 +35,6 @@ spring:
       multipart:
         max-file-size: 10MB
         max-request-size: 10MB
-
   kafka:
     bootstrap-servers: ${KAFKA_FULL_URL:localhost:9092}
     consumer:
@@ -50,6 +42,9 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topics:
       test:
         name: test-topic
@@ -64,17 +59,12 @@ spring:
         partitions: 1
         replication-factor: 1
 
-application:
-  security:
-    jwt:
-      secret-key: urfaguzelsehiristanbulda
-      expiration: 900000 #  15 min in ms
-      cookie-name: jwt-cookie
-      refresh-token:
-        expiration: 1296000000 # 15 days in ms
-        cookie-name: refresh-jwt-cookie
+springdoc:
+  packagesToScan: com.oteller.example.log
+
 server:
-  port: ${SERVER_PORT:5001}
+  port: ${SERVER_PORT:5004}
+
 
 eureka:
   client:
@@ -82,5 +72,11 @@ eureka:
       defaultZone: ${EUREKA_FULL_URL:http://localhost:5761/eureka/}
     registerWithEureka: true
     enabled: true #eureka discovery is enabled in this profile
-  instance:
-    prefer-ip-address: false
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
