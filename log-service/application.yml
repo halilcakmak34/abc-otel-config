@@ -59,7 +59,7 @@ springdoc:
   packagesToScan: com.oteller.example.log
 
 server:
-  port: ${SERVER_PORT:5004}
+  port: ${SERVER_PORT:5008}
 
 
 eureka:
